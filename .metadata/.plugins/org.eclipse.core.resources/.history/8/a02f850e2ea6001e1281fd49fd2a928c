@@ -1,0 +1,12 @@
+package com.lgy.spring_mvc.dao;
+
+public class UserDaoIm implements UserDao {
+
+	
+	public String findById(String id) {
+		
+		return null;
+	}
+
+	
+}

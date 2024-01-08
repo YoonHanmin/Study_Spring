@@ -1,0 +1,151 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.uploadResult{
+		width : 100%;
+		background-color: gray;
+	}
+	.uploadResult ul{
+		display : flex;
+		flex-flow : row;
+		justify-content : center;
+		align-items : center;
+	}
+	.uploadResult ul li{
+		list-style : none;
+		padding : 10px;
+		
+	}
+	.uploadResult ul li img{
+		width : 20px;
+	}
+</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	
+	
+	
+<!-- jquery를 통해 파일 업로드할때 클라이언트단에서 업로드된 파일의 정보를 읽어 Ajax 방식으로 서버에 전송한다. -->
+	<script type="text/javascript">
+// 		ready : HTML 요소가 다 읽어지면 실행
+		$(document).ready(function(){
+// 			파일을 담기위한 객체 생성
+// 			확장자가 exe,sh,js인 파일 업로드를 금지하기위한 정규식
+			var regex = new RegExp("(.*?)\.(exe|sh|js)$")
+			var maxSize = 5242880; // 5MB
+			
+// 			업로드할 파일이 들어있는 formdata안에 모든 키를 삭제하는 메소드 선언(초기화를 위해)
+			function clearFormData(formData) {
+			    // 모든 키를 순회하면서 삭제
+//			for of 문 : 모든 원소를 순회하면서 각각의 원소를 가지고 반복문 실행 
+			    for (var key of formData.keys()) { 
+			        formData.delete(key);
+			    }
+			}
+			
+			function checkExtension(fileName,fileSize){
+				if (fileSize>maxSize) {
+					alert("파일 사이즈 초과");
+					return false;		
+				}
+				if(regex.test(fileName)){
+					alert("해당 종류의 파일은 업로드할 수 없습니다.");
+					return false;
+				}
+				return true;
+			}
+			var formData = new FormData();
+// 			업로드 하기전, 초기 HTML 상태의 uploadDiv요소를 복제해놓음 (업로드후 HTML요소 초기화를 위해)
+			var cloneObj = $(".uploadDiv").clone();
+			console.log("@#@CloneObj ===> "+cloneObj);
+			
+			$("#uploadBtn").on("click",function(){
+// 				uploadFile이름의 input 속성을 변수로 받음
+			var inputFile = $("input[name='uploadFile']");
+// 			files : 파일 정보 속성
+			var files = inputFile[0].files;
+			console.log("files ==>"+files);
+			
+// 			files.length : 파일 갯수
+			for (var i = 0; i < files.length; i++) {
+// 				파일 크기와 종류가 false면 return(종료)
+				if(!checkExtension(files[i].name,files[i].size)){
+					return;
+				}
+// 				append(이름,파일): 파일 정보를 formData에 추가
+				formData.append("uploadFile",files[i])
+			}
+			
+// 			업로드한 파일에 대한 정보를 읽어 변수에 담았으니, ajax를 통해 서버에 전송 
+			$.ajax({
+// 				매핑된 Controll단 호출
+// 				result로 파일 목록을 보내기 위해서 json 방식 사용
+				url :"uploadAjaxAction.json"
+// 				processData : true : 기본 key/value를 쿼리스트링으로 전송, false는 반대
+				,processData : false
+// 				contentType : 기본값- application/x-www-form-urlencoded; charset=UTF-8,
+// 								첨부파일은 false : multipart/form-data로 전송됨
+				,contentType : false
+				,data : formData
+				,type : "post"
+				,success:function(result){
+					alert("Uploaded");
+					console.log("@@result ==>"+result);
+// 					result 파일을 파라미터로 파일 목록을 출력하는 함수 실행
+//					서버가 보낸 result는 List<AttachFileDTO>타입으로 json방식으로 받아야함 
+					showUploadedFile(result);
+// 					업로드후, 초기상태를 복제해놓은 cloneObj로 바꿔줌으로써 화면상의 초기화 
+					$(".uploadDiv").html(cloneObj.html());
+// 					업로드후, formData에 쌓인 업로드 데이터를 비우기위해 선언해놓은 초기화 메소드 실행
+					clearFormData(formData);
+					
+				}
+			}); // end of ajax
+			
+		}); // end of btn onclick
+			var uploadResult = $(".uploadResult ul");
+		
+// 		업로드 파일 목록 처리하는 function
+		function showUploadedFile(uploadResultArr){
+			console.log("@# uploadResultArr ==> "+uploadResultArr);
+			var str = "";
+// 			업로드 파일 갯수만큼 반복
+			$(uploadResultArr).each(function(i,obj){
+// 				obj.fileName : 업로드 파일 이름
+				if(!obj.image){
+					str += "<li><img src='./resources/image/attach.png'>"+obj.fileName+"</li>";
+				}else {
+									
+				str += "<li>"+obj.fileName+"</li>";
+				}
+
+
+			}); // end of each function
+// 			div class에 파일 목록 추가
+			uploadResult.append(str);
+		}
+		
+	}); // end of ready function
+	</script>
+</head>
+<body>
+	<h1>Upload with Jquery</h1>
+	
+	<div class="uploadDiv">
+		<input type="file" name="uploadFile" multiple>
+	</div>
+	
+	<div class="uploadResult">
+		<ul>
+			
+		</ul>
+	</div>
+	<button id="uploadBtn">Upload</button>
+	
+	
+</body>
+</html>

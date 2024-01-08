@@ -1,0 +1,42 @@
+package com.lgy.spring_16_fileUpload;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.extern.slf4j.Slf4j;
+
+@org.springframework.stereotype.Controller
+@Slf4j
+public class Controller {
+
+	@GetMapping("/uploadForm")
+	public void uploadForm() {
+		log.info("This is uploadForm.");
+		
+	}
+//	uploadFormAction.jsp를 찾아감
+	@PostMapping("/uploadFormAction")
+	public void uploadFormPost(MultipartFile[] uploadFile) {
+		String uploadFolder = "D:\\dev\\upload";
+		for(MultipartFile multipartFile : uploadFile) {
+			log.info("====================");
+//			getOriginalFilename : 업로드되는 파일 이름
+			log.info("@# 업로드 되는 파일 이름 ==>"+multipartFile.getOriginalFilename());
+//			getSize : 파일 크기
+			log.info("@# 업로드 되는 파일 크기 ==>"+multipartFile.getSize());
+//			File(저장경로,파일이름) 객체를 생성해서 saveFile로 받음.
+			File saveFile = new File(uploadFolder,multipartFile.getOriginalFilename());
+			try{
+//				transferTo : savaFile 내용을 저장
+				multipartFile.transferTo(saveFile);
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+}

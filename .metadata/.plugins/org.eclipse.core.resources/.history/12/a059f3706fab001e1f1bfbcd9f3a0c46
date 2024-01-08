@@ -1,0 +1,29 @@
+package com.lgy.spring_16_fileUpload;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.extern.slf4j.Slf4j;
+
+@org.springframework.stereotype.Controller
+@Slf4j
+public class Controller {
+
+	@GetMapping("/uploadForm")
+	public void uploadForm() {
+		log.info("This is uploadForm.");
+		
+	}
+	@PostMapping("/uploadFormAction")
+	public void uploadFormPost(MultipartFile[] uploadFile) {
+		for(MultipartFile multipartFile : uploadFile) {
+			log.info("====================");
+//			getOriginalFilename : 업로드되는 파일 이름
+			log.info("@# 업로드 되는 파일 이름 ==>"+multipartFile.getOriginalFilename());
+//			getSize : 파일 크기
+			log.info("@# 업로드 되는 파일 크기 ==>"+multipartFile.getSize());
+		}
+	}
+	
+}

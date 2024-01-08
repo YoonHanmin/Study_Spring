@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- Calculator 클래스로 calculator 객체 생성 -->
+	<bean id="calculator" class="com.lgy.spring_3_2.Calculator"></bean>
+	
+	<bean id="myCalculator" class="com.lgy.spring_3_2.MyCalculator">
+<!-- setCalculator 호출 -->
+	<property name="calculator">
+<!-- 	위의 bean 태그에서 생성한 calculator 객체를 ref(참조)하여 넣어준다. -->
+		<ref bean="calculator"/>
+	</property>
+<!-- 	setFirstNum,secondNum 호출 -->
+	<property name="firstNum" value="10"></property>
+	<property name="secondNum" value="2"></property>
+	
+	</bean>
+	<bean id="three" class="com.lgy.spring_3_2.Three"></bean>
+<bean id="myThree" class="com.lgy.spring_3_2.MyThree">
+	<property name="three">
+	<ref bean="three"/>
+	</property>
+	<property name="num" value="129"></property>
+</bean>
+
+	<bean id="div" class="com.lgy.spring_3_2.Div"></bean>
+	<bean id="myDiv" class="com.lgy.spring_3_2.MyDiv">
+	<property name="div">
+	<ref bean="div"/>
+	</property>
+	<property name="num" value="77"></property>
+</bean>
+
+	<bean id="rect" class="com.lgy.spring_3_2.Rect"></bean>
+	<bean id="myRect" class="com.lgy.spring_3_2.MyRect">
+	<property name="rect">
+	<ref bean="rect"/>
+	</property>
+	<property name="x" value="150"></property>
+	<property name="y" value="150"></property>
+</bean>
+
+	<bean id="median" class="com.lgy.spring_3_2.Median"></bean>
+	<bean id="myMedian" class="com.lgy.spring_3_2.MyMedian">
+	<property name="median">
+	<ref bean="median"/>
+	</property>
+	<property name="a" value="20"></property>
+	<property name="b" value="100"></property>
+	<property name="c" value="33"></property>
+</bean>
+
+	<bean id="even" class="com.lgy.spring_3_2.EvenNumber"></bean>
+	<bean id="myEven" class="com.lgy.spring_3_2.MyEven">
+	<property name="even">
+	<ref bean="even"/>
+	</property>
+	<property name="num" value="10"></property>
+</bean>
+	
+	<bean id="capital" class="com.lgy.spring_3_2.Capital"></bean>
+	<bean id="mycap" class="com.lgy.spring_3_2.Mycap">
+	<property name="capital">
+	<ref bean="capital"/>
+	</property>
+	<property name="alpa" value="F"></property>
+	
+</bean>
+	
+</beans>

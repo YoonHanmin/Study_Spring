@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- student 클래스는 생성자로 매개변수를 받아오기때문에 생성자 매개변수 세팅 해줘야함	 -->
+<bean id="student1" class="com.lgy.spring_5_1_DI.Student">
+<!-- constructor-arg : 생성자 매개변수 넣어줌 -->
+	<constructor-arg>
+	<value>홍길동</value>
+	</constructor-arg>
+	<constructor-arg>
+	<value>10살</value>
+	</constructor-arg>
+	<constructor-arg>
+	<value>3학년</value>
+	</constructor-arg>
+	<constructor-arg>
+	<value>2반</value>
+	</constructor-arg>
+</bean>
+<bean id="student2" class="com.lgy.spring_5_1_DI.Student">
+<!-- constructor-arg : 생성자 매개변수 넣어줌 -->
+	<constructor-arg value="이시연"/>
+	<constructor-arg value="24살"/>
+	<constructor-arg value="2학년"/>
+	<constructor-arg value="1반"/>
+</bean>
+
+<!-- 생성자 매개변수로 student 객체를 받는 studentInfo 객체 빈 생성  -->
+<bean id="studentInfo" class="com.lgy.spring_5_1_DI.StudentInfo">
+	<constructor-arg>
+	<ref bean="student1"/>
+	</constructor-arg>
+</bean>
+
+
+
+
+</beans>

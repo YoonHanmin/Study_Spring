@@ -1,0 +1,5 @@
+package com.lgy.spring_15.dao;
+
+public class MemberDAO {
+
+}

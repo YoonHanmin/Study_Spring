@@ -1,0 +1,6 @@
+package com.lgy.spring_mvc.controller;
+
+@org.springframework.stereotype.Controller
+public class Controller {
+
+}

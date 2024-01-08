@@ -1,0 +1,8 @@
+package com.lgy.spring_16_fileUpload;
+
+
+
+@org.springframework.stereotype.Controller
+public class Controller {
+
+}

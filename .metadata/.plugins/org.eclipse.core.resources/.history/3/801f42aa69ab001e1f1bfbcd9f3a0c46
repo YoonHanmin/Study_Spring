@@ -1,0 +1,22 @@
+package com.lgy.spring_16_fileUpload;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import lombok.extern.slf4j.Slf4j;
+
+@org.springframework.stereotype.Controller
+@Slf4j
+public class Controller {
+
+	@GetMapping("/uploadForm")
+	public void uploadForm() {
+		log.info("This is uploadForm.");
+		
+	}
+	@PostMapping("/uploadFormAction")
+	public void uploadFormAction() {
+		
+	}
+	
+}

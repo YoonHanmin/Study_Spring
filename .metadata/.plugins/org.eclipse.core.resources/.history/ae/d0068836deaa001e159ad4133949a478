@@ -1,0 +1,16 @@
+package com.lgy.spring_15.dao;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.lgy.spring_15.domain.MemberDTO;
+
+@Repository
+public interface Dao {
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	public MemberDTO findByName(String name);
+	
+}

@@ -1,0 +1,33 @@
+package com.lgy.spring_15.service;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lgy.spring_15.dao.Dao;
+import com.lgy.spring_15.domain.MemberDTO;
+
+import lombok.extern.slf4j.Slf4j;
+@Service
+@Slf4j
+public class MemberService {
+	private final Dao dao;
+	
+	@Autowired
+	public MemberService(SqlSessionTemplate sqlSessionTemplate) {
+		this.dao = sqlSessionTemplate.getMapper(Dao.class);
+		
+	}
+	
+	public MemberDTO findByName(String name) {
+		return dao.findByName(name);
+	}
+	
+	public List<MemberDTO> findAll(){
+		log.info(dao.findAll().toString());
+		return dao.findAll();
+	}
+	
+}

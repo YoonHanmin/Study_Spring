@@ -1,0 +1,9 @@
+package com.lgy.spring_ajax;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+
+public class HomeControllerTest {
+
+}

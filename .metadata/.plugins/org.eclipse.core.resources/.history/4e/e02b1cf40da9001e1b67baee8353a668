@@ -1,0 +1,15 @@
+package com.lgy.spring_ajax;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+@Controller
+
+public class HomeControllerTest {
+
+	@be
+	public String ajax() {
+		return null;
+		
+	}
+}

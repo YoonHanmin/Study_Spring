@@ -1,0 +1,48 @@
+package com.lgy.spring_mvc;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import com.lgy.spring_mvc.dao.UserDao;
+
+@Repository
+public class UserDaoIm implements UserDao{
+
+//	private JdbcTemplate jdbcTemplate;
+	
+//	@Autowired
+//	public UserDaoIm(JdbcTemplate jdbcTemplate) {
+//		this.jdbcTemplate = jdbcTemplate;
+//	}
+	private UserDao userDao;
+	
+	
+	public UserDaoIm(UserDao userDao) {
+	
+	this.userDao = userDao;
+}
+
+
+	@Override
+	public String findById(String id) {
+			String str =userDao.findById(id);
+		return str;
+	}
+
+
+//	@Override
+//	public String findById(String id) {
+//		String sql = "select count(*) from user where userID=?";
+//		int res= jdbcTemplate.queryForObject(sql,Integer.class,id);
+//		if(res>0) { 
+//		return "exist";
+//	}else {
+//		return "usable";
+//	}
+//	
+	
+}

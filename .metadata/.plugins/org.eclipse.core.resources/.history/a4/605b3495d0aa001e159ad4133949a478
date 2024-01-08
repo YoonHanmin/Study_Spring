@@ -1,0 +1,107 @@
+package com.lgy.spring_15;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.google.gson.Gson;
+import com.lgy.spring_15.domain.MemberDTO;
+import com.lgy.spring_15.domain.MemberVO;
+import com.lgy.spring_15.domain.TicketVO;
+
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+// 스프링 Bean 설정파일을 사용한다. 
+@WebAppConfiguration
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"
+	,"file:src/main/webapp/WEB-INF/spring/root-context.xml"	})
+@Slf4j
+public class SampleControllerTests {
+	
+	@Setter(onMethod_ = {@Autowired})
+	private WebApplicationContext ctx;
+	private MockMvc mockMvc;
+	
+	
+//	@Test 단위의 테스트 수행하기전에 mockMvc에 config 빈 설정 의존성 주입해준다.
+	@Before
+	public void setup() {
+		
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+	}
+	
+	@Test
+	public void testConvert() throws Exception{
+//	 	컨트롤러 테스트하기위해 클라이언트의 요청정보를 직접 입력
+		TicketVO ticketVO = new TicketVO();
+		ticketVO.setTno(123);
+		ticketVO.setOwner("admin");
+		ticketVO.setGrade("AAA");
+//		Gson : 구글에서 제공되는 것으로 객체를 문자열로 변환
+//		클라이언트에서 서버로 json 형식으로 넘어가기에 변환 해줘야함.
+		String jsonStr = new Gson().toJson(ticketVO);
+		log.debug("@#$test11 log_jsonStr ===>"+jsonStr);
+		log.info("@#$test22 log_jsonStr ===>"+jsonStr);
+//		post("/sample/ticket") : post 방식으로 컨트롤러단을 찾아감
+//		컨트롤러의 /sample/ticket을 view없이 mockMvc가 실행해준다.
+		mockMvc.perform(post("/sample/ticket")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonStr)
+				)
+				.andExpect(status().is(200));
+	}
+	
+	@Test
+	public void testMember() throws Exception{
+		MemberVO member = new MemberVO();
+		member.setId("sohee12");
+		member.setName("HanSoHee");
+		member.setPwd("1234");
+		member.setEmail("sohee@gmail.com");
+		String json = new Gson().toJson(member);
+		log.debug("@@@Log From Test@@@ ==> "+json);
+		mockMvc.perform(post("/sample/info")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().is(200));
+	}
+	
+	@Test
+	public void member() throws Exception{
+		String name = "hong";
+		mockMvc.perform(get("/sample/find")
+				.param("name",name))
+				.andDo(print());
+		
+		log.debug("@@test log@@ ==>"+name);
+	}
+	
+	@Test
+	public void join() throws Exception{
+		MemberDTO member = new MemberDTO("5555","한소희","27");
+		String json = new Gson().toJson(member);
+		mockMvc.perform(post("/sample/join")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json));
+			
+		
+	}
+	
+}
+

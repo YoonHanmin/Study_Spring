@@ -1,0 +1,22 @@
+package com.lgy.userDao;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.lgy.userDto.User;
+
+@Repository
+public class UserDao {
+	@Autowired
+	protected SqlSessionTemplate sqlSession;
+	
+	public User findByUserNum(int userNum) {
+		return sqlSession.selectOne("com.lgy.userDao.UserDao.findById");
+		
+	}
+	
+	public int findByName(String name) {
+		return sqlSession.selectOne("com.lgy.userDao.UserDao.findByName");
+	}
+}

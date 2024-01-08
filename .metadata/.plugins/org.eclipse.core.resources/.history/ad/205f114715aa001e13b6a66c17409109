@@ -1,0 +1,33 @@
+package com.lgy.spring_15.dao;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
+import com.lgy.spring_15.domain.MemberDTO;
+
+@Service
+public class MemberDAO {
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	public MemberDAO(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	private final RowMapper<MemberDTO> rowMapper = (rs, rowNum) ->
+    new MemberDTO(
+        rs.getInt("id"),
+        rs.getString("name"),
+        rs.getInt("age")
+    );
+	
+    public MemberDTO findByName(String name) {
+    	String sql = "select * from member where name=?";
+    	return jdbcTemplate.queryForObject(sql, MemberDTO.class);
+    	
+    }
+	
+}

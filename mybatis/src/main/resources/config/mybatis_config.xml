@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+ 
+ 	<properties>
+ 		<property name="User" value="user"/>
+ 		<property name="userID" value="userID"/>
+ 		<property name="userName" value="userName"/>
+ 		<property name="password" value="password"/>
+ 		<property name="userClass" value="userClass"/>
+ 		<property name="userNum" value="userNum"/>
+ 	</properties>
+ 	
+ 	<typeAliases>
+        <package name="com.lgy.userDto" />
+    </typeAliases>
+ 
+ 
+</configuration>

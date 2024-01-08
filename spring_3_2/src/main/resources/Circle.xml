@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="circle" class="com.lgy.spring_3_2.Circle"></bean>
+<bean id="myCircle" class="com.lgy.spring_3_2.MyCircle">
+<property name="circle">
+<ref bean="circle"/>
+</property>
+<property name="radius" value="10"></property>
+
+</bean>
+
+<bean id="season" class="com.lgy.spring_3_2.Season"></bean>
+<bean id="mySeason" class="com.lgy.spring_3_2.MySeason">
+<property name="season">
+<ref bean="season"/>
+</property>
+<property name="month" value="9"></property>
+
+</bean>
+
+<bean id="won2Dollar" class="com.lgy.spring_3_2.Won2Dollar"></bean>
+<bean id="myWon2Dollar" class="com.lgy.spring_3_2.MyWon2Dollar">
+	<property name="won2Dollar">
+	<ref bean="won2Dollar"/>
+	</property>
+	<property name="won" value="3600"></property>
+</bean>
+
+
+</beans>

@@ -1,0 +1,14 @@
+package com.lgy.spring_15.dao;
+
+
+import org.springframework.stereotype.Repository;
+
+import com.lgy.spring_15.domain.MemberDTO;
+
+
+public interface Dao {
+	
+	
+	public MemberDTO findByName(String name);
+	
+}

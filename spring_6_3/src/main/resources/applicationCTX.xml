@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+<!-- xml에서 자바 스프링 설정파일 추가하기위한 설정 -->
+<!-- 	<context:annotation-config></context:annotation-config> -->
+<!-- 	<bean class="com.lgy.spring_6_3.ApplicationConfig"></bean> -->
+	
+	
+	<bean id="student2" class="com.lgy.spring_6_3.Student">
+	<constructor-arg value="홍길순"></constructor-arg>
+	<constructor-arg value="30"></constructor-arg>
+	<constructor-arg>
+	<list>
+	<value>마라톤</value>
+	<value>요리</value>
+	</list>
+	</constructor-arg>
+	<property name="height" value="190"></property>
+	<property name="weight" value="70"></property>
+	</bean>
+	
+	<bean id="employee1" class="com.lgy.spring_6_3.Employee" c:name="임영웅">
+	<property name="pay" value="300"></property>
+	<property name="certification">
+	<list>
+	<value>정보처리기사</value>
+	<value>sqlD</value>
+	</list>
+	</property>	
+	
+	</bean>
+	<bean id="emplyeeInfo1" class="com.lgy.spring_6_3.EmplyeeInfo">
+	<property name="employee">
+	<ref bean="employee1"></ref>
+	</property>
+	</bean> 
+	
+	<bean id="professor1" class="com.lgy.spring_6_3.Professor" c:name="김교수" p:age="33">
+	<property name="dept">
+	<list>
+	<value>Java</value>
+	<value>Oracle</value>
+	</list>
+	</property>	
+
+	</bean> 
+
+	<bean id="professorInfo" class="com.lgy.spring_6_3.ProfessorInfo">
+	<property name="professor">
+	<ref bean="professor1"></ref>
+	</property>
+	</bean>	
+	
+	<bean id="singer1" class="com.lgy.spring_6_3.Singer" c:name="BTS" p:member="7">
+	<property name="song">
+	<list>
+	<value>FakeLove</value>
+	<value>Dynamite</value>
+	</list>
+	</property>	
+	</bean>
+	
+	<bean id="singerInfo" class="com.lgy.spring_6_3.SingerInfo">
+	<property name="singer">
+	<ref bean="singer1"></ref>
+	</property>
+	</bean>
+
+	<bean id="animation1" class="com.lgy.spring_6_3.Animation" c:name="OnePiece" p:year="1999">
+	<property name="member">
+	<list>
+	<value>루피</value>
+	<value>조로</value>
+	<value>상디</value>
+	</list>
+	</property>	
+	</bean>
+	
+		<bean id="animationInfo" class="com.lgy.spring_6_3.AnimationInfo">
+	<property name="animation">
+	<ref bean="animation1"></ref>
+	</property>
+	</bean>
+</beans>
+
+

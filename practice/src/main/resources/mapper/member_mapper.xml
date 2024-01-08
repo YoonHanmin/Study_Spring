@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="com.lgy.pratice.repository.MemberRepository">
+  <select id="getMemberById" parameterType="int" resultType="com.lgy.practice.dto.MemberDto">
+    SELECT * FROM member WHERE id = #{id}
+  </select>
+
+  <insert id="insertUser" parameterType="com.example.model.User">
+    INSERT INTO member (id,name,age) VALUES (#{id}, #{name},#{age})
+  </insert>
+
+ </mapper>
