@@ -22,7 +22,7 @@
 		
 	}
 	.uploadResult ul li img{
-		width : 20px;
+		width : 50px;
 	}
 </style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -103,38 +103,110 @@
 // 					업로드후, formData에 쌓인 업로드 데이터를 비우기위해 선언해놓은 초기화 메소드 실행
 					clearFormData(formData);
 					
-				}
+				} // end of success
 			}); // end of ajax
 			
 		}); // end of btn onclick
+		
+// 		<span>x 눌렀을 경우 삭제하는 메소드 생성
+		$(".uploadResult").on("click","span",function(){
+			
+			var targetFile = $(this).data("file"); //<span data-file>값
+			var type = $(this).data("type");
+			var uploadResultItem = $(this).closest("li"); // 해당 span태그의 가장 가까운 <li>태그
+			
+			console.log("@# targetFile ==>> "+targetFile);
+			console.log("@# type ==>> "+type);
+			console.log("@# uploadResultItem ==>> "+uploadResultItem);
+			
+			$.ajax({
+				url:"deleteFile"
+				,data:{fileName: targetFile,type:type}
+				,dataType:"text"
+				,type:"post"
+				,sucess: function(result){
+					uploadResultItem.remove();
+					alert(result);
+					// 브라우저에서 해당 썸네일이나 첨부파일 이미지 제거
+				}
+			});
+		}); // end of span function
 			var uploadResult = $(".uploadResult ul");
 		
 // 		업로드 파일 목록 처리하는 function
 		function showUploadedFile(uploadResultArr){
+		
 			console.log("@# uploadResultArr ==> "+uploadResultArr);
 			var str = "";
 // 			업로드 파일 갯수만큼 반복
 			$(uploadResultArr).each(function(i,obj){
+// 				
+			
+				if(!obj.image){ // 이미지 파일이 아닌경우 파일모양의 이미지 출력
+// 					
+					var fileCallPath=encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
+// 					파일 다운로드하기위해 <a>태그에 컨트롤러 /download 메소드에 fileCallpath 넣어 호출
+// 					str += "<li><div><a href='./download?filename="+fileCallPath+"'>"
+// 							+"<img src='./resources/image/attach.png'>"+obj.fileName+"</a>"
+// 							+"<span data-file=\'"+fileCallPath+"\' data-type='file'>x</span></div></li>";
+					str += "<li><div><a href='./download?fileName="+fileCallPath+"'>"
+					  +"<img src='./resources/img/attach.png'>"+obj.fileName+"</a>"
+					  +"<span data-file=\'"+fileCallPath+"\' data-type='file'>x</span></div></li>";
+						
+							
+							
+				}else {	// 이미지 파일인 경우 썸네일 출력	
+// 					썸네일 파일 경로 + 이름
+					var fileCallPath=encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);
+				
+					var originPath = obj.uploadPath+"\\"+obj.uuid+"_"+obj.fileName
+// 					정규식 : 백슬래시(\)를 모두 슬래시(/)로 변경 
+					originPath = originPath.replace(new RegExp(/\\/g),"/");
+					console.log("@#@# originPath ===>"+originPath);
 // 				obj.fileName : 업로드 파일 이름
-				if(!obj.image){
-					str += "<li><img src='./resources/image/attach.png'>"+obj.fileName+"</li>";
-				}else {
-									
-				str += "<li>"+obj.fileName+"</li>";
+// 				str += "<li>"+obj.fileName+"</li>";
+//				<img>태그의 src에 컨트롤러의 /display경로의 getFile()메소드 호출 
+// 				str += "<li><img src='./display?fileName="+fileCallPath+"'></li>";
+					str += "<li><a href=\"javascript:showImage(\'"+originPath+"\')\"><img src='./display?fileName="
+					+fileCallPath+"'></a><span data-file=\'"+fileCallPath+"\' data-type='image'>x</span></li>";
+				
+				
 				}
 
 
 			}); // end of each function
 // 			div class에 파일 목록 추가
 			uploadResult.append(str);
-		}
+		} // end of showUploadedFile
+		$(".bigPictureWrapper").on("click",function(){
+			setTimeout(function(){ // 원본 이미지 클릭시 hide(1초)로 사라짐.
+				$(".bigPictureWrapper").hide();
+			},1000); // end of setTimeout
+			}); //end of .bigPictureWrapper Click
 		
 	}); // end of ready function
+		
+// 	이미지를 보여주는 함수
+	function showImage(fileCallPath){
+// 		alert(fileCallPath);
+		$(".bigPictureWrapper").css("display","flex").show();
+		console.log("##@#@# fileCallpath : "+fileCallPath);
+// 		bigPicture클래스의 div의 html요소에 컨트롤러 메소드 호출하여 원본 이미지 파일을 출력하는 img태그를 삽입한다. 
+		$(".bigPicture").html("<img src='./display?fileName="+encodeURI(fileCallPath)+"'>")
+		.animate({width:"100%",height:"100%"},1000);
+	}
+	
+	
 	</script>
 </head>
 <body>
 	<h1>Upload with Jquery</h1>
 	
+	<div class="bigPictureWrapper">
+		<div class="bigPicture">
+		
+		</div>
+	</div>
 	<div class="uploadDiv">
 		<input type="file" name="uploadFile" multiple>
 	</div>

@@ -3,6 +3,8 @@ package com.lgy.spring_16_fileUpload;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +14,16 @@ import java.util.UUID;
 
 import javax.management.openmbean.ArrayType;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lgy.spring_16_fileUpload.domain.AttachFileDTO;
@@ -155,5 +163,81 @@ public class Controller {
 		}
 		return false;
 	}
+	// 이미지 파일을 받아서 화면에 출력(byte[] 타입)
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		log.info("@# fileName ===>"+fileName);
+//		업로드 파일 경로 + 이름
+		File file = new File("D:\\dev\\upload\\"+fileName);
+		log.info("@# file ==>"+file);
+		ResponseEntity<byte[]> result = null;
+		HttpHeaders header = new HttpHeaders();
+		try {
+//		HttpHeaders 객체 생성후 add(컨텐츠타입,경로)메소드로 파일타입을 HTTP 헤더에 추가
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+//			파일 정보를 byte 배열로 복사+헤더정보+http상태 정상을 결과에 저장
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		return result;
+	}
+	// 파일 다운로드 메소드
+	// 모든 파일은 내부적으로 bit 값을 가짐
+	// APPLICATION_OCTET_STREAM_VALUE : 비트 스트림을 재조합하여 파일로 구성
+	@GetMapping(value= "/download",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> downloadFile(String fileName){
+		log.info("@# fileName ===>"+fileName);
+//		파일을 리소스(자원)으로 변경, 파일을 비트값으로 전환
+		Resource resource = new FileSystemResource("D:\\dev\\upload\\"+fileName);
+		log.info("@# resource ===>"+resource.getFilename());
+//		리소스에서 파일명을 찾아서 변수에 저장
+		String resourceName = resource.getFilename();
+//		uuid를 제거하기위해 파일명에서 _이전(uuid)은 자름.
+		String resourceOriginalName =resourceName.substring(resourceName.indexOf("_")+1);
+		HttpHeaders headers = new HttpHeaders();
+		try {
+//			헤더에 파일 다운로드 정보 추가
+			headers.add("Content-Disposition", "attachment; filename="
+					+new String(resourceOriginalName.getBytes("UTF-8"),"ISO-8859-1"));
+		} catch (UnsupportedEncodingException e) {
+			
+			e.printStackTrace();
+		}
+//		윈도우 다운로드시 필요한 정보(리소스,헤더,상태 OK)
+			return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String fileName,String type){
+		log.info("@# fileName,type ==> "+fileName,type);
+		File file;
+//		URLDecoder.decode : 서버에 올라간 파일을 삭제하기 위해서 디코딩
+		try {
+			file =new File("D:\\dev\\upload\\"+URLDecoder.decode(fileName,"UTF-8"));
+			file.delete();
+//			이미지 파일이면 썸네일도 삭제
+			if(type.equals("image")) {
+//				getAbsolutePath : 절대경로(full path)에서 s_ 제거
+				String largeFileName = file.getAbsolutePath().replace("s_","");
+				log.info("@# largeFileName ==>"+largeFileName);
+				file =new File(URLDecoder.decode(largeFileName,"UTF-8"));
+				file.delete();
+			
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+//			예외 오류 발생시 404 not Found 처리
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}// ajax의 success function(result)의 result값으로 "deleted"가 전송됨
+		return new ResponseEntity<String>("deleted",HttpStatus.OK);
+	}
+	
 	
 }
